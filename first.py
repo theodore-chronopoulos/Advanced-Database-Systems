@@ -7,14 +7,14 @@ spark = SparkSession.builder.appName(
     "query1-rd").getOrCreate()
 
 
-table_schema = StructType([StructField('ID', IntegerType(), True),
-                     StructField('Title', StringType(), True),
-                     StructField('Description', StringType(), False),
-                     StructField('Release Date', TimestampType(), False),
-                     StructField('Duration', DoubleType(), True),
-                     StructField('Cost', IntegerType(), True),
-                     StructField('Income', LongType(), True),
-                     StructField('Popularity', DoubleType(), True)])
+table_schema = StructType([StructField('ID', IntegerType()),
+                     StructField('Title', StringType()),
+                     StructField('Description', StringType()),
+                     StructField('Release_Date', TimestampType()),
+                     StructField('Duration', DoubleType()),
+                     StructField('Cost', IntegerType()),
+                     StructField('Income', LongType()),
+                     StructField('Popularity', DoubleType())])
 
 df = spark.read.csv('hdfs://master:9000/files/movies.csv', sep=',',
                          schema = table_schema, enforceSchema = True)
