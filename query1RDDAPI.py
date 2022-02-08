@@ -11,8 +11,7 @@ def format_name(name):
 
 res = \
 	sc.textFile("hdfs://master:9000/files/movies.csv"). \
-	map(lambda x : ((x[4]))). \
-	sortByKey(ascending=False). \
+	map(lambda x : x.split(",")) \
 	take(5)
 
 for i in res:
