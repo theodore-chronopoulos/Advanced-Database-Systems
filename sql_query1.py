@@ -6,7 +6,10 @@ spark = SparkSession.builder.appName("query1-rdd").getOrCreate()
 spark.conf.set("spark.sql.crossJoin.enabled", "true")
 
 def format_year(datetimevar):
-    year = str(datetimevar.strftime("%Y"))
+    if (datetimevar == None): 
+        year = ''
+    else:
+        year = str(datetimevar.strftime("%Y"))
     return year
 
 def profit_func(cost, income):
