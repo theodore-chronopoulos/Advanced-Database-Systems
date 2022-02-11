@@ -21,7 +21,7 @@ spark.udf.register("average_func", average_func)
 spark.udf.register("percentage_func", percentage_func)
 
 sqlString1 = \
-    "select _c0 as User_ID, average_func(avg(_c2)) as Avg_Stars "  + \
+    "select User as User_ID, average_func(avg(Rating)) as Avg_Stars "  + \
 	"from ratings " + \
     "group by User_ID "
 

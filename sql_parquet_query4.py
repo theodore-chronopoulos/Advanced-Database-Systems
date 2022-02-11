@@ -44,9 +44,9 @@ spark.udf.register("desc_length", desc_length)
 spark.udf.register("time_period_year_func", time_period_year_func)
 
 sqlString1 = \
-    "select movie_genres._c0 as Drama_Movies_ID "  + \
+    "select movie_genres.ID as Drama_Movies_ID "  + \
 	"from movie_genres " + \
-	"where movie_genres._c1 ==  'Drama' "
+	"where movie_genres.Genre ==  'Drama' "
 
 sqlString2 = \
     "select desc_length(movies.Description) as Desc_Length, format_year(movies.Release_Date) as Year "  + \

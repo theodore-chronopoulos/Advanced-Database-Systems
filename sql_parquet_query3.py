@@ -13,21 +13,21 @@ ratings.printSchema()
 ratings.registerTempTable("ratings")
 
 sqlString1 = \
-    "select _c1 as Movie_ID, avg(_c2) as Avg_Stars "  + \
+    "select Movie_ID, avg(Rating) as Avg_Stars "  + \
 	"from ratings " + \
     "group by Movie_ID "
 
 sqlString2 = \
-    "select count(movie_genres._c0) as Movies_Per_Category, movie_genres._c1 as Genre "  + \
+    "select count(movie_genres.ID) as Movies_Per_Category, movie_genres.Genre as Genre "  + \
 	"from movie_genres, avg_per_movie " + \
-	"where movie_genres._c0 ==  avg_per_movie.Movie_ID " + \
+	"where movie_genres.ID ==  avg_per_movie.Movie_ID " + \
     "group by Genre "
 
 sqlString3 = \
-    "select avg(avg_per_movie.Avg_Stars) as Avg_per_Cat, movie_genres._c1 as Genre "  + \
+    "select avg(avg_per_movie.Avg_Stars) as Avg_per_Cat, movie_genres.Genre as Genre "  + \
 	"from avg_per_movie, movie_genres " + \
-    "where avg_per_movie.Movie_ID == movie_genres._c0 " + \
-    "group by movie_genres._c1" 
+    "where avg_per_movie.Movie_ID == movie_genres.ID " + \
+    "group by movie_genres.Genre" 
 
 sqlString4 = \
     "select avg_per_cat.Genre as Genre, avg_per_cat.Avg_per_Cat as Avg_per_Cat, movies_per_cat.Movies_Per_Category as Movies_Per_Category "  + \
