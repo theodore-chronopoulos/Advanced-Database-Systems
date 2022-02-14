@@ -1,5 +1,8 @@
 from select import select
 from pyspark.sql import SparkSession
+import timeit
+
+start = timeit.default_timer()
 
 spark = SparkSession.builder.appName("query1-rdd").getOrCreate()
 spark.conf.set("spark.sql.crossJoin.enabled", "true")
@@ -40,12 +43,17 @@ sqlString4 = \
 
 res = spark.sql(sqlString1)
 res.registerTempTable("average_ratings")
-res.show()
+# res.show()
 res2 = spark.sql(sqlString2)
 res2.registerTempTable("num_of_users_3plus")
-res2.show()
+# res2.show()
 res3 = spark.sql(sqlString3)
 res3.registerTempTable("num_of_users")
-res3.show()
+# res3.show()
 res4 = spark.sql(sqlString4)
-res4.show()
+# res4.show()
+
+res4.write.csv("hdfs://master:9000/outputs/sql_parquet_q2.csv")
+
+stop = timeit.default_timer()
+print('Time: ', stop - start) 

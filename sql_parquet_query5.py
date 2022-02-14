@@ -7,31 +7,24 @@ start = timeit.default_timer()
 spark = SparkSession.builder.appName("query1-rdd").getOrCreate()
 spark.conf.set("spark.sql.crossJoin.enabled", "true")
 
-movie_genres = spark.read.format('csv'). \
-			options(header='false',
-				inferSchema='true'). \
-			load("hdfs://master:9000/files/movie_genres.csv")
-
+movie_genres = spark.read.parquet("hdfs://master:9000/files/movie_genres.parquet")
+movie_genres.printSchema()
 movie_genres.registerTempTable("movie_genres")
 
-movies = spark.read.format('csv'). \
-			options(header='false',
-				inferSchema='true'). \
-			load("hdfs://master:9000/files/movies.csv")
+movies = spark.read.parquet("hdfs://master:9000/files/movies.parquet")
+movies.printSchema()
 
 movies.registerTempTable("movies")
 
-ratings = spark.read.format('csv'). \
-			options(header='false',
-				inferSchema='true'). \
-			load("hdfs://master:9000/files/ratings.csv")
+ratings = spark.read.parquet("hdfs://master:9000/files/ratings.parquet")
+ratings.printSchema()
 
 ratings.registerTempTable("ratings")
 
 sqlString1 = \
-    "select movie_genres._c0 as Movie_ID, movie_genres._c1 as Genre, ratings._c0 as User_ID, ratings._c2 as Rating "  + \
+    "select movie_genres.ID as Movie_ID, movie_genres.Genre as Genre, ratings.User as User_ID, ratings.Rating as Rating "  + \
 	"from movie_genres, ratings " + \
-	"where movie_genres._c0 ==  ratings._c1 "
+	"where movie_genres.ID ==  ratings.Movie_ID "
 
 sqlString2 = \
     "select count(User_ID) as Total_User_Rating, Genre, User_ID "  + \
@@ -59,9 +52,9 @@ sqlString5 = \
 
 sqlString6 = \
 	"select Total_User_Rating, Genre, User_ID, " + \
-	"Rating, Movie_ID, movies._c7 as Popularity, movies._c1 as Title " + \
+	"Rating, Movie_ID, movies.Popularity as Popularity, movies.Title as Title " + \
 	"from final0, movies " + \
-	"where Movie_ID == movies._c0 "
+	"where Movie_ID == movies.ID "
 
 sqlString7 = \
 	"select Genre, max(Rating) as Max, min(Rating) as Min " + \
@@ -152,7 +145,7 @@ res11 = spark.sql(sqlString11)
 # res11.registerTempTable("final_table")
 # res11.show()
 
-res11.write.csv("hdfs://master:9000/outputs/sql_csv_q5.csv")
+res11.write.csv("hdfs://master:9000/outputs/sql_parquet_q5.csv")
 
 stop = timeit.default_timer()
 print('Time: ', stop - start) 
