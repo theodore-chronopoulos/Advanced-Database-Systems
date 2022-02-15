@@ -7,13 +7,13 @@ start = timeit.default_timer()
 spark = SparkSession.builder.appName("query1-rdd").getOrCreate()
 spark.conf.set("spark.sql.crossJoin.enabled", "true")
 
-def average_func(average):
-    average = round(average, 2)
-    return average
+# def average_func(average):
+#     average = round(average, 2)
+#     return average
 
 def percentage_func(plusthree, total):
     average = (plusthree / total) * 100
-    average = round(average, 2)
+    # average = round(average, 2)
     return average
 
 ratings = spark.read.format('csv'). \
@@ -22,11 +22,11 @@ ratings = spark.read.format('csv'). \
 			load("hdfs://master:9000/files/ratings.csv")
 
 ratings.registerTempTable("ratings")
-spark.udf.register("average_func", average_func)
+# spark.udf.register("average_func", average_func)
 spark.udf.register("percentage_func", percentage_func)
 
 sqlString1 = \
-    "select _c0 as User_ID, average_func(avg(_c2)) as Avg_Stars "  + \
+    "select _c0 as User_ID, avg(_c2) as Avg_Stars "  + \
 	"from ratings " + \
     "group by User_ID "
 
