@@ -9,7 +9,7 @@ spark = SparkSession.builder.appName("query1-rdd").getOrCreate()
 spark.conf.set("spark.sql.crossJoin.enabled", "true")
 
 def desc_length(average):
-    average_len = len(average)
+    average_len = len(average.split())
     return average_len
 
 def format_year(datetimevar):
