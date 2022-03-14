@@ -17,7 +17,6 @@ df = spark.read.csv('hdfs://master:9000/files/ratings.csv', sep=',',
 # df = spark.read.csv('hdfs://master:9000/files/ratings.csv', sep=',',
 #                          inferSchema = True)
 
-print("here")
 df.show()
 
 df.write.parquet("hdfs://master:9000/files/ratings.parquet")

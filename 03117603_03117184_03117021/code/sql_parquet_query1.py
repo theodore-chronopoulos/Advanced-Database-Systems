@@ -21,10 +21,8 @@ def profit_func(cost, income):
     profit = temp1 / cost
     return profit
 
-movies = spark.read.format('csv'). \
-			options(header='false',
-				inferSchema='true'). \
-			load("hdfs://master:9000/files/movies.csv")
+movies = spark.read.parquet("hdfs://master:9000/files/movies.parquet")
+movies.printSchema()
 
 movies.registerTempTable("movies")
 spark.udf.register("formatter", format_year)
@@ -32,9 +30,9 @@ spark.udf.register("profit", profit_func)
 
 
 sqlString1 = \
-    "select _c1 as Title, formatter(_c3) as Year, profit(_c5, _c6) as Profit  "  + \
+    "select Title, formatter(Release_Date) as Year, profit(Cost, Income) as Profit  "  + \
 	"from movies " + \
-    "where  _c5 <> 0 and _c6 <> 0 and formatter(_c3) > '1999' " + \
+    "where Cost <> 0 and Income <> 0 and formatter(Release_Date) > '1999' " + \
     "order by Year desc "
 
 sqlString2 = \
@@ -55,8 +53,9 @@ res.registerTempTable("profits")
 res2 = spark.sql(sqlString2)
 res2.registerTempTable("maxes")
 res3 = spark.sql(sqlString3)
+# res3.show()
 
-res3.write.csv("hdfs://master:9000/outputs/sql_csv_q1.csv")
+res3.write.csv("hdfs://master:9000/outputs/sql_parquet_q1.csv")
 
 stop = timeit.default_timer()
 print('Time: ', stop - start) 
